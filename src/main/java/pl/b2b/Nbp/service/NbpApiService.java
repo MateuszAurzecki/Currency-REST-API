@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import pl.b2b.Nbp.model.Calculator;
+import pl.b2b.Nbp.model.CurrencyWithDates;
 import pl.b2b.Nbp.model.CurrencyWithDatesObject;
 import pl.b2b.Nbp.model.GoldRate;
 import pl.b2b.Nbp.model.GoldRateObject;
@@ -50,16 +51,17 @@ public class NbpApiService {
 
         ResponseEntity<CurrencyWithDatesObject> exchange = restTemplate.getForEntity("http://api.nbp.pl/api/exchangerates/rates/a/" + code + "/" + start + "/" + end, CurrencyWithDatesObject.class);
         datesObject = exchange.getBody();
-        int listSize = datesObject.getCurrencyWithDatesList().size();
+        List<CurrencyWithDates> currencyWithDatesList = datesObject.getCurrencyWithDatesList();
+        int listSize = currencyWithDatesList.size();
         double avg = 0;
         for (int i = 0; i < listSize; i++) {
-            avg += datesObject.getCurrencyWithDatesList().get(i).getMid();
+            avg += currencyWithDatesList.get(i).getMid();
         }
-        avg = avg / datesObject.getCurrencyWithDatesList().size();
+        avg = avg / currencyWithDatesList.size();
         datesObject.setAverageValueInSpecifiedDates(avg);
 
-        Double firstRecord = datesObject.getCurrencyWithDatesList().get(0).getMid();
-        Double lastRecord = datesObject.getCurrencyWithDatesList().get(listSize - 1).getMid();
+        Double firstRecord = currencyWithDatesList.get(0).getMid();
+        Double lastRecord = currencyWithDatesList.get(listSize - 1).getMid();
 
         Double change = ((lastRecord - firstRecord) / firstRecord) * 100;
 
@@ -74,7 +76,6 @@ public class NbpApiService {
         Calculator calculator = new Calculator();
         calculator.setRates(getSingleCurrency(code));
         calculator.setCurrencyUnits(currencyUnits);
-        calculator.setCurrencyValueInPln(currencyUnits * calculator.getRates().getMid());
 
         return calculator;
     }

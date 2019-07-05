@@ -18,6 +18,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import pl.b2b.Nbp.TestContext;
+import pl.b2b.Nbp.exception.InvalidDateException;
 import pl.b2b.Nbp.model.Calculator;
 import pl.b2b.Nbp.model.GoldRateObject;
 
@@ -34,12 +35,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class NbpControllerTest {
 
 
-
-
     @Autowired
     private MockMvc mvc;
 
-    @Test
+    @Test(expected = InvalidDateException.class)
     public void requestWithDateErrorTest() throws Exception {
         this.mvc.perform(get("/currency/GBP/2019-04-02/2019-04-0"))
                 .andExpect(jsonPath("message").value("Wrong date in Url"));

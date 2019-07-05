@@ -1,5 +1,7 @@
 package pl.b2b.Nbp.controller;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,6 +14,7 @@ import pl.b2b.Nbp.service.NbpApiService;
 
 import java.util.List;
 
+@ApiModel
 @RestController
 public class NbpController {
 
@@ -22,7 +25,7 @@ public class NbpController {
     //funcja zwraca aktualny sredni kurs podanej waluty
 
     @GetMapping("/code/{code}")
-    public Rates getSingleCurrencyMid(@PathVariable String code) {
+    public Rates getSingleCurrencyMid(@ApiParam(defaultValue = "AUD",name = "code",value = "AUD") @PathVariable String code) {
         Rates result = nbpApiService.getSingleCurrency(code);
         return result;
     }

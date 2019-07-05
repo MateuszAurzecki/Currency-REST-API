@@ -27,10 +27,7 @@ public class Calculator {
     }
 
     public Double getCurrencyValueInPln() {
-        return currencyValueInPln;
+        return currencyUnits * getRates().getMid();
     }
 
-    public void setCurrencyValueInPln(Double currencyValueInPln) {
-        this.currencyValueInPln = currencyValueInPln;
-    }
 }
